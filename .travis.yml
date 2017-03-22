@@ -70,13 +70,14 @@ before_script:
       make install;
     fi
   # Configure pcsc-relay
+  - cd $TRAVIS_BUILD_DIR/pcsc-relay && autoreconf -vsi
   - if [ -z "$HOST" ]; then
-      cd $TRAVIS_BUILD_DIR/pcsc-relay;
-      autoreconf -vsi;
+      ./configure || cat config.log;
+    else
       ./configure --host=$HOST || cat config.log;
     fi
   # Configure ccid
-  - if [ $TRAVIS_OS_NAME == linux ]; then
+  - if [ $TRAVIS_OS_NAME == linux -a -z "$HOST" ]; then
       cd $TRAVIS_BUILD_DIR/ccid && autoreconf -vsi;
       ./configure OPENSC_LIBS="-L$PREFIX/lib -lopensc" || cat config.log;
     fi
@@ -98,10 +99,8 @@ script:
       cd $TRAVIS_BUILD_DIR/virtualsmartcard/src/vpicc && export PYTHONPATH=$PYTHONPATH:`pwd` && export LD_LIBRARY_PATH=$PREFIX/lib/ && python -m unittest discover -s virtualsmartcard.tests -p *_test.py -v;
     fi
   # Build pcsc-relay
-  - if [ -z "$HOST" ]; then
-      make -C $TRAVIS_BUILD_DIR/pcsc-relay;
-    fi
+  - make -C $TRAVIS_BUILD_DIR/pcsc-relay;
   # Build ccid
-  - if [ $TRAVIS_OS_NAME == linux ]; then
+  - if [ $TRAVIS_OS_NAME == linux -a -z "$HOST" ]; then
       make -C $TRAVIS_BUILD_DIR/ccid;
     fi
