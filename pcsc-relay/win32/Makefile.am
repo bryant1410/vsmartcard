@@ -22,7 +22,7 @@ $(LIBNFC_DLL): $(LIBNFC_DIR)/configure.ac
 
 
 PCSC_RELAY_EXE=$(WIN32_DIR)/bin/pcsc-relay.exe
-$(PCSC_RELAY_EXE): $(LIBNFC_DLL)
+$(PCSC_RELAY_EXE):
 	cd $(top_builddir) && ./configure \
 		--prefix=/ \
 		--host=$(MINGW) --target=$(MINGW) \
