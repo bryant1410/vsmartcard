@@ -74,7 +74,7 @@ before_script:
   - if [ -z "$HOST" ]; then
       ./configure || cat config.log;
     else
-      ./configure --host=$HOST || cat config.log;
+      ./configure --host=$HOST PCSC_CFLAGS="-I/usr/$HOST/include" || cat config.log;
     fi
   # Configure ccid
   - if [ $TRAVIS_OS_NAME == linux -a -z "$HOST" ]; then
