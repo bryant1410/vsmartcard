@@ -39,6 +39,13 @@ install:
     fi
 
 before_script:
+  # virtualsmartcard requires OpenPACE
+  - if [ -z "$HOST" ]; then
+      git clone https://github.com/frankmorgner/openpace;
+      cd openpace && autoreconf -vis;
+      ./configure --prefix=$PREFIX --enable-openssl-install --enable-python || cat config.log;
+      make install;
+    fi
   # ccid requires OpenSC
   - git clone https://github.com/frankmorgner/OpenSC
   - cd OpenSC && autoreconf -vsi
